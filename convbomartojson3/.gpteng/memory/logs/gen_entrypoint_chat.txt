@@ -1,0 +1,82 @@
+
+2024-05-31T21:43:44.965704
+================================ System Message ================================
+
+You will get information about a codebase that is currently on disk in the current folder.
+The user will ask you to write a script that runs the code in a specific way.
+You will answer with code blocks that include all the necessary terminal commands.
+Do not install globally. Do not use sudo.
+Do not explain the code, just give the commands.
+Do not use placeholders, use example values (like . for a folder argument) if necessary.
+
+
+================================ Human Message =================================
+
+
+        Make a unix script that
+        a) installs dependencies
+        b) runs all necessary parts of the codebase (in parallel if necessary)
+        
+Information about the codebase:
+
+```
+File: requirements.txt
+1 beautifulsoup4==4.12.2
+2 lxml==4.9.2
+
+File: src/bookmark_converter.py
+1 import sys
+2 from typing import List, Dict
+3 from datetime import datetime
+4 from dateutil.parser import parse
+5 from bs4 import BeautifulSoup
+6 
+7 class Bookmark:
+8     def __init__(self, url: str, description: str, icon: str, add_date: str, last_modified: str):
+9         self.url = url
+10         self.description = description
+11         self.icon = icon
+12         self.add_date = parse(add_date).strftime("%Y-%m-%d %H:%M:%S")
+13         self.last_modified = parse(last_modified).strftime("%Y-%m-%d %H:%M:%S")
+14 
+15 def convert_bookmark_file(input_path: str, output_path: str):
+16     with open(input_path, "r", encoding="utf-8") as file:
+17         soup = BeautifulSoup(file, "lxml")
+18         bookmarks: List[Bookmark] = []
+19         for link in soup.find_all("a"):
+20             add_date = link["ADD_DATE"]
+21             last_modified = link["LAST_MODIFIED"]
+22             description = link.text
+23             url = link["HREF"]
+24             bookmarks.append(Bookmark(url, description, "", add_date, last_modified))
+25         output_dict: Dict[str, List[Bookmark]] = {"bookmarks": bookmarks}
+26         with open(output_path, "w", encoding="utf-8") as file:
+27             json.dump(output_dict, file)
+28 
+29 if __name__ == "__main__":
+30     if len(sys.argv) != 3:
+31         print("Usage: python bookmark_converter.py <input_path> <output_path>")
+32         sys.exit(1)
+33     convert_bookmark_file(sys.argv[1], sys.argv[2])
+
+```
+
+================================== Ai Message ==================================
+
+ Create a file named `run_script.sh` with the following content:
+
+```bash
+#!/bin/bash
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the script in parallel using GNU Parallel
+find src/*.py | parallel python {}
+```
+
+To run the script, execute the following command:
+
+```bash
+chmod +x run_script.sh && ./run_script.sh
+```
