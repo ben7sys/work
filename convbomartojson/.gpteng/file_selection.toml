@@ -3,7 +3,8 @@
 # gpt-engineer can only read selected files. Including irrelevant files will degrade performance, cost additional tokens and potentially overflow token limit.
 
 [files]
- "bookmark.html" = "selected"
- "requirements.txt" = "selected"
+"bookmark.html" = "selected"
+"bookmark_script.py" = "selected"
+"requirements.txt" = "selected"
 "run.sh" = "selected"
 # 
