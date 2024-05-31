@@ -1,0 +1,1 @@
+Goal: Convert a bookmark file for example bookmark.html into a structured json file. Let the user choose the bookmark file in the script variable. Do not create a shell script.
